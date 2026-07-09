@@ -1,0 +1,8 @@
+/target/
+**/*.rs.bk
+.env.encrypted
+.env.decrypted
+*.swp
+*.swo
+*~
+.DS_Store

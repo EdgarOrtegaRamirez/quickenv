@@ -1,0 +1,36 @@
+[package]
+name = "quickenv"
+version = "0.1.0"
+edition = "2021"
+description = "Environment variable management & validation CLI"
+authors = ["EdgarOrtegaRamirez"]
+license = "MIT"
+repository = "https://github.com/EdgarOrtegaRamirez/quickenv"
+
+[dependencies]
+clap = { version = "4.5", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+toml = "0.8"
+thiserror = "2.0"
+anyhow = "1.0"
+regex = "1.11"
+base64 = "0.22"
+aes-gcm = "0.10"
+argon2 = "0.5"
+rand = "0.8"
+sha2 = "0.10"
+hex = "0.4"
+walkdir = "2.5"
+indicatif = "0.17"
+colored = "3.0"
+shellexpand = "3.1"
+dirs = "6.0"
+chrono = { version = "0.4", features = ["serde"] }
+rpassword = "7.3"
+
+[dev-dependencies]
+tempfile = "3.14"
+assert_cmd = "2.0"
+predicates = "3.1"
