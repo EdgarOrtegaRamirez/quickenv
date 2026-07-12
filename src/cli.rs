@@ -19,6 +19,8 @@ pub enum Cli {
     Diff(commands::diff::DiffArgs),
     /// Generate markdown documentation from .env.example
     Docs(commands::docs::DocsArgs),
+    /// Audit env var usage: cross-reference code with .env files, detect secrets, find issues
+    Audit(commands::audit::AuditArgs),
 }
 
 impl Cli {
@@ -31,6 +33,7 @@ impl Cli {
             Cli::Decrypt(args) => commands::encrypt::decrypt_execute(args),
             Cli::Diff(args) => commands::diff::execute(args),
             Cli::Docs(args) => commands::docs::execute(args),
+            Cli::Audit(args) => commands::audit::execute(args),
         }
     }
 
