@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 mod analyzer;
 mod cli;
 mod commands;
