@@ -25,6 +25,14 @@ pub enum Cli {
     Docs(commands::docs::DocsArgs),
     /// Audit env var usage: cross-reference code with .env files, detect secrets, find issues
     Audit(commands::audit::AuditArgs),
+    /// Generate or render .env templates with variable substitution
+    Template(commands::template::TemplateArgs),
+    /// Apply declarative migration operations to .env files
+    Migrate(commands::migrate::MigrateArgs),
+    /// Synchronize .env files across environments with configurable strategies
+    Sync(commands::sync::SyncArgs),
+    /// Import/export .env files to/from various CI/CD formats
+    Export(commands::export::ExportArgs),
 }
 
 impl Cli {
@@ -38,6 +46,10 @@ impl Cli {
             Cli::Diff(args) => commands::diff::execute(args),
             Cli::Docs(args) => commands::docs::execute(args),
             Cli::Audit(args) => commands::audit::execute(args),
+            Cli::Template(args) => commands::template::execute(args),
+            Cli::Migrate(args) => commands::migrate::execute(args),
+            Cli::Sync(args) => commands::sync::execute(args),
+            Cli::Export(args) => commands::export::execute(args),
         }
     }
 
