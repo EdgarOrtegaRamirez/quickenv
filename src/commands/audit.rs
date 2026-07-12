@@ -111,11 +111,7 @@ fn print_text_output(result: &crate::analyzer::AuditResult) {
         .collect();
 
     if !errors.is_empty() {
-        println!(
-            "{} Errors ({}):",
-            "✗".red().bold(),
-            errors.len()
-        );
+        println!("{} Errors ({}):", "✗".red().bold(), errors.len());
         println!("{}", "──────────────────────────────".red());
         for issue in &errors {
             print_issue(issue, "red");
@@ -124,11 +120,7 @@ fn print_text_output(result: &crate::analyzer::AuditResult) {
     }
 
     if !warnings.is_empty() {
-        println!(
-            "{} Warnings ({}):",
-            "⚠".yellow().bold(),
-            warnings.len()
-        );
+        println!("{} Warnings ({}):", "⚠".yellow().bold(), warnings.len());
         println!("{}", "──────────────────────────────".yellow());
         for issue in &warnings {
             print_issue(issue, "yellow");
@@ -137,11 +129,7 @@ fn print_text_output(result: &crate::analyzer::AuditResult) {
     }
 
     if !infos.is_empty() {
-        println!(
-            "{} Info ({}):",
-            "ℹ".blue().bold(),
-            infos.len()
-        );
+        println!("{} Info ({}):", "ℹ".blue().bold(), infos.len());
         println!("{}", "──────────────────────────────".blue());
         for issue in &infos {
             print_issue(issue, "blue");
@@ -193,7 +181,11 @@ fn print_issue(issue: &crate::analyzer::Issue, color: &str) {
         _ => "".to_string(),
     };
 
-    println!("    [{}] {}", color_fn(&issue.issue_type.to_string()), issue.var_name.bold());
+    println!(
+        "    [{}] {}",
+        color_fn(&issue.issue_type.to_string()),
+        issue.var_name.bold()
+    );
     println!("           {} {}", color_fn("→"), issue.message);
     if !loc.is_empty() {
         println!("           {} {}", "at".dimmed(), loc.dimmed());
@@ -208,17 +200,32 @@ fn print_json_output(result: &crate::analyzer::AuditResult, pretty: bool) -> any
     use std::collections::BTreeMap;
 
     let mut output = BTreeMap::new();
-    output.insert("summary".to_string(), serde_json::to_value(&result.summary)?);
+    output.insert(
+        "summary".to_string(),
+        serde_json::to_value(&result.summary)?,
+    );
 
     let issues: Vec<BTreeMap<String, serde_json::Value>> = result
         .issues
         .iter()
         .map(|i| {
             let mut m = BTreeMap::new();
-            m.insert("type".to_string(), serde_json::Value::String(i.issue_type.to_string()));
-            m.insert("var_name".to_string(), serde_json::Value::String(i.var_name.clone()));
-            m.insert("severity".to_string(), serde_json::Value::String(i.severity.to_string()));
-            m.insert("message".to_string(), serde_json::Value::String(i.message.clone()));
+            m.insert(
+                "type".to_string(),
+                serde_json::Value::String(i.issue_type.to_string()),
+            );
+            m.insert(
+                "var_name".to_string(),
+                serde_json::Value::String(i.var_name.clone()),
+            );
+            m.insert(
+                "severity".to_string(),
+                serde_json::Value::String(i.severity.to_string()),
+            );
+            m.insert(
+                "message".to_string(),
+                serde_json::Value::String(i.message.clone()),
+            );
             if let Some(file) = &i.file {
                 m.insert("file".to_string(), serde_json::Value::String(file.clone()));
             }
@@ -226,7 +233,10 @@ fn print_json_output(result: &crate::analyzer::AuditResult, pretty: bool) -> any
                 m.insert("line".to_string(), serde_json::Value::Number(line.into()));
             }
             if let Some(lang) = &i.language {
-                m.insert("language".to_string(), serde_json::Value::String(lang.clone()));
+                m.insert(
+                    "language".to_string(),
+                    serde_json::Value::String(lang.clone()),
+                );
             }
             m
         })

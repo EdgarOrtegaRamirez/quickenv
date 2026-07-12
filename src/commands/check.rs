@@ -30,8 +30,12 @@ pub fn execute(args: &CheckArgs) -> anyhow::Result<()> {
     let env_content = crate::envfile::read_env_file(env_path)?;
     let example_content = crate::envfile::read_env_file(example_path)?;
 
-    let env_vars: HashSet<String> = crate::envfile::env_to_map(&env_content).into_keys().collect();
-    let example_vars: HashSet<String> = crate::envfile::env_to_map(&example_content).into_keys().collect();
+    let env_vars: HashSet<String> = crate::envfile::env_to_map(&env_content)
+        .into_keys()
+        .collect();
+    let example_vars: HashSet<String> = crate::envfile::env_to_map(&example_content)
+        .into_keys()
+        .collect();
 
     let missing: Vec<String> = {
         let mut v: Vec<String> = example_vars.difference(&env_vars).cloned().collect();

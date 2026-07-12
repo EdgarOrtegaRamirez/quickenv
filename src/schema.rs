@@ -68,9 +68,14 @@ pub fn parse_rules_from_content(content: &str) -> Vec<VarRule> {
                     .captures(&current_description)
                     .and_then(|c| c.get(1).map(|m| Regex::new(m.as_str()).ok()))
                     .flatten();
-                let allowed_values = re_allowed
-                    .captures(&current_description)
-                    .map(|c| c.get(1).unwrap().as_str().split(',').map(|s| s.trim().to_string()).collect());
+                let allowed_values = re_allowed.captures(&current_description).map(|c| {
+                    c.get(1)
+                        .unwrap()
+                        .as_str()
+                        .split(',')
+                        .map(|s| s.trim().to_string())
+                        .collect()
+                });
 
                 let description = current_description.trim().to_string();
 
@@ -221,7 +226,10 @@ LOG_LEVEL=info
     #[test]
     fn test_validate_all_good() {
         let mut vars = BTreeMap::new();
-        vars.insert("DATABASE_URL".to_string(), "postgres://localhost/db".to_string());
+        vars.insert(
+            "DATABASE_URL".to_string(),
+            "postgres://localhost/db".to_string(),
+        );
         vars.insert("LOG_LEVEL".to_string(), "debug".to_string());
 
         let content = r#"# DB URL @required

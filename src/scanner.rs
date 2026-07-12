@@ -9,31 +9,73 @@ pub fn scan_directory(path: &std::path::Path) -> HashSet<String> {
     // Common patterns for env var access across languages
     let patterns: Vec<(Regex, usize)> = vec![
         // Python: os.environ['VAR'], os.environ.get('VAR'), os.getenv('VAR')
-        (Regex::new(r#"os\.environ\s*\[['"]([A-Z_][A-Z0-9_]*)['"]\]"#).unwrap(), 1),
-        (Regex::new(r#"os\.environ\.get\s*\(\s*['"]([A-Z_][A-Z0-9_]*)['"]"#).unwrap(), 1),
-        (Regex::new(r#"os\.getenv\s*\(\s*['"]([A-Z_][A-Z0-9_]*)['"]"#).unwrap(), 1),
+        (
+            Regex::new(r#"os\.environ\s*\[['\"]([A-Z_][A-Z0-9_]*)['\"]\]"#).unwrap(),
+            1,
+        ),
+        (
+            Regex::new(r#"os\.environ\.get\s*\(\s*['\"]([A-Z_][A-Z0-9_]*)['\"]"#).unwrap(),
+            1,
+        ),
+        (
+            Regex::new(r#"os\.getenv\s*\(\s*['\"]([A-Z_][A-Z0-9_]*)['\"]"#).unwrap(),
+            1,
+        ),
         // Python-dotenv: load_dotenv, str(os.environ)
-        (Regex::new(r#"['"]([A-Z_][A-Z0-9_]*)['"]\s*,\s*default\s*=").unwrap(), 1),
+        (
+            Regex::new(r#"['\"]([A-Z_][A-Z0-9_]*)['\"]\s*,\s*default\s*="#).unwrap(),
+            1,
+        ),
         // Node: process.env.VAR
-        (Regex::new(r#"process\.env\.([A-Z_][A-Z0-9_]*)"#).unwrap(), 1),
-        (Regex::new(r#"process\.env\[['"]([A-Z_][A-Z0-9_]*)['"]\]"#).unwrap(), 1),
+        (
+            Regex::new(r#"process\.env\.([A-Z_][A-Z0-9_]*)"#).unwrap(),
+            1,
+        ),
+        (
+            Regex::new(r#"process\.env\[['\"]([A-Z_][A-Z0-9_]*)['\"]\]"#).unwrap(),
+            1,
+        ),
         // Go: os.Getenv("VAR"), os.LookupEnv("VAR")
-        (Regex::new(r#"os\.Getenv\(\s*"([A-Z_][A-Z0-9_]*)"#).unwrap(), 1),
-        (Regex::new(r#"os\.LookupEnv\(\s*"([A-Z_][A-Z0-9_]*)"#).unwrap(), 1),
+        (
+            Regex::new(r#"os\.Getenv\(\s*"([A-Z_][A-Z0-9_]*)"#).unwrap(),
+            1,
+        ),
+        (
+            Regex::new(r#"os\.LookupEnv\(\s*"([A-Z_][A-Z0-9_]*)"#).unwrap(),
+            1,
+        ),
         // Rust: std::env::var("VAR")
-        (Regex::new(r#"std::env::var\(\s*"([A-Z_][A-Z0-9_]*)"#).unwrap(), 1),
-        (Regex::new(r#"env::var\(\s*"([A-Z_][A-Z0-9_]*)"#).unwrap(), 1),
+        (
+            Regex::new(r#"std::env::var\(\s*"([A-Z_][A-Z0-9_]*)"#).unwrap(),
+            1,
+        ),
+        (
+            Regex::new(r#"env::var\(\s*"([A-Z_][A-Z0-9_]*)"#).unwrap(),
+            1,
+        ),
         // Ruby: ENV['VAR'], ENV.fetch('VAR')
-        (Regex::new(r#"ENV\[['"]([A-Z_][A-Z0-9_]*)['"]\]"#).unwrap(), 1),
-        (Regex::new(r#"ENV\.fetch\(['"]([A-Z_][A-Z0-9_]*)['"]"#).unwrap(), 1),
+        (
+            Regex::new(r#"ENV\[['\"]([A-Z_][A-Z0-9_]*)['\"]\]"#).unwrap(),
+            1,
+        ),
+        (
+            Regex::new(r#"ENV\.fetch\(['\"]([A-Z_][A-Z0-9_]*)['\"]"#).unwrap(),
+            1,
+        ),
         // Shell: $VAR, ${VAR}
         (Regex::new(r#"\$\{([A-Z_][A-Z0-9_]*)\}"#).unwrap(), 1),
         // Java: System.getenv("VAR")
-        (Regex::new(r#"System\.getenv\(\s*"([A-Z_][A-Z0-9_]*)"#).unwrap(), 1),
+        (
+            Regex::new(r#"System\.getenv\(\s*"([A-Z_][A-Z0-9_]*)"#).unwrap(),
+            1,
+        ),
         // C#: Environment.GetEnvironmentVariable("VAR")
-        (Regex::new(r#"Environment\.GetEnvironmentVariable\(\s*"([A-Z_][A-Z0-9_]*)"#).unwrap(), 1),
+        (
+            Regex::new(r#"Environment\.GetEnvironmentVariable\(\s*"([A-Z_][A-Z0-9_]*)"#).unwrap(),
+            1,
+        ),
         // Docker: ${VAR} in Dockerfiles
-        (Regex::new(r#"ENV\s+([A-Z_][A-Z0-9_]*)\s*=").unwrap(), 1),
+        (Regex::new(r#"ENV\s+([A-Z_][A-Z0-9_]*)\s*="#).unwrap(), 1),
         // Makefile: $(VAR), ${VAR}
         (Regex::new(r#"\$\(([A-Z_][A-Z0-9_]*)\)"#).unwrap(), 1),
     ];
@@ -41,12 +83,11 @@ pub fn scan_directory(path: &std::path::Path) -> HashSet<String> {
     for entry in WalkDir::new(path)
         .into_iter()
         .filter_entry(|e| !is_skip_dir(e))
+        .flatten()
     {
-        if let Ok(entry) = entry {
-            if entry.file_type().is_file() {
-                if let Some(vars) = scan_file(entry.path(), &patterns) {
-                    all_vars.extend(vars);
-                }
+        if entry.file_type().is_file() {
+            if let Some(vars) = scan_file(entry.path(), &patterns) {
+                all_vars.extend(vars);
             }
         }
     }
@@ -56,9 +97,20 @@ pub fn scan_directory(path: &std::path::Path) -> HashSet<String> {
 
 fn is_skip_dir(entry: &walkdir::DirEntry) -> bool {
     let skip_dirs = [
-        "node_modules", ".git", "target", "build", "dist", "vendor",
-        ".venv", "venv", "__pycache__", ".cache", ".terraform",
-        "third_party", "third-party", "out",
+        "node_modules",
+        ".git",
+        "target",
+        "build",
+        "dist",
+        "vendor",
+        ".venv",
+        "venv",
+        "__pycache__",
+        ".cache",
+        ".terraform",
+        "third_party",
+        "third-party",
+        "out",
     ];
     entry.file_type().is_dir()
         && entry
@@ -71,10 +123,9 @@ fn is_skip_dir(entry: &walkdir::DirEntry) -> bool {
 fn scan_file(path: &std::path::Path, patterns: &[(Regex, usize)]) -> Option<HashSet<String>> {
     // Skip binary files and common non-code files
     let skip_extensions = [
-        "png", "jpg", "jpeg", "gif", "bmp", "ico", "svg", "woff", "woff2",
-        "ttf", "eot", "mp3", "mp4", "avi", "mov", "mkv", "zip", "tar", "gz",
-        "bz2", "xz", "7z", "rar", "pdf", "doc", "docx", "xls", "xlsx", "o",
-        "so", "dll", "dylib", "exe", "lock", "sum", "sig",
+        "png", "jpg", "jpeg", "gif", "bmp", "ico", "svg", "woff", "woff2", "ttf", "eot", "mp3",
+        "mp4", "avi", "mov", "mkv", "zip", "tar", "gz", "bz2", "xz", "7z", "rar", "pdf", "doc",
+        "docx", "xls", "xlsx", "o", "so", "dll", "dylib", "exe", "lock", "sum", "sig",
     ];
 
     if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
@@ -97,9 +148,12 @@ fn scan_file(path: &std::path::Path, patterns: &[(Regex, usize)]) -> Option<Hash
 
     let mut vars = HashSet::new();
     let common_ignore: HashSet<&str> = [
-        "HOME", "PATH", "TERM", "SHELL", "USER", "PWD", "HOSTNAME",
-        "LANG", "LC_ALL", "LC_CTYPE", "LOGNAME", "UID", "GID",
-    ].iter().cloned().collect();
+        "HOME", "PATH", "TERM", "SHELL", "USER", "PWD", "HOSTNAME", "LANG", "LC_ALL", "LC_CTYPE",
+        "LOGNAME", "UID", "GID",
+    ]
+    .iter()
+    .cloned()
+    .collect();
 
     for (re, group_idx) in patterns {
         for cap in re.captures_iter(&content) {
@@ -132,9 +186,18 @@ api_key = os.getenv('API_KEY')
 log_level = os.environ.get('LOG_LEVEL')
 "#;
         let patterns = vec![
-            (Regex::new(r#"os\.environ\s*\[['"]([A-Z_][A-Z0-9_]*)['"]\]"#).unwrap(), 1),
-            (Regex::new(r#"os\.environ\.get\s*\(\s*['"]([A-Z_][A-Z0-9_]*)['"]"#).unwrap(), 1),
-            (Regex::new(r#"os\.getenv\s*\(\s*['"]([A-Z_][A-Z0-9_]*)['"]"#).unwrap(), 1),
+            (
+                Regex::new(r#"os\.environ\s*\[['\"]([A-Z_][A-Z0-9_]*)['\"]\]"#).unwrap(),
+                1,
+            ),
+            (
+                Regex::new(r#"os\.environ\.get\s*\(\s*['\"]([A-Z_][A-Z0-9_]*)['\"]"#).unwrap(),
+                1,
+            ),
+            (
+                Regex::new(r#"os\.getenv\s*\(\s*['\"]([A-Z_][A-Z0-9_]*)['\"]"#).unwrap(),
+                1,
+            ),
         ];
         let mut vars = HashSet::new();
         for (re, idx) in &patterns {
@@ -156,8 +219,14 @@ const db = process.env.DATABASE_URL;
 const key = process.env['API_KEY'];
 "#;
         let patterns = vec![
-            (Regex::new(r#"process\.env\.([A-Z_][A-Z0-9_]*)"#).unwrap(), 1),
-            (Regex::new(r#"process\.env\[['"]([A-Z_][A-Z0-9_]*)['"]\]"#).unwrap(), 1),
+            (
+                Regex::new(r#"process\.env\.([A-Z_][A-Z0-9_]*)"#).unwrap(),
+                1,
+            ),
+            (
+                Regex::new(r#"process\.env\[['\"]([A-Z_][A-Z0-9_]*)['\"]\]"#).unwrap(),
+                1,
+            ),
         ];
         let mut vars = HashSet::new();
         for (re, idx) in &patterns {

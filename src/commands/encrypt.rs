@@ -60,10 +60,17 @@ pub fn decrypt_execute(args: &DecryptArgs) -> anyhow::Result<()> {
     if args.stdout {
         print!("{}", plaintext);
     } else {
-        let output_path = args.output.as_ref().map(std::path::Path::new)
+        let output_path = args
+            .output
+            .as_ref()
+            .map(std::path::Path::new)
             .unwrap_or_else(|| std::path::Path::new(".env.decrypted"));
         std::fs::write(output_path, &plaintext)?;
-        eprintln!("Decrypted: {} → {}", input_path.display(), output_path.display());
+        eprintln!(
+            "Decrypted: {} → {}",
+            input_path.display(),
+            output_path.display()
+        );
     }
 
     Ok(())

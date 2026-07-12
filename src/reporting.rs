@@ -4,19 +4,24 @@ use colored::*;
 /// Print validation errors in a human-readable format
 pub fn print_validation_report(errors: &[ValidationError], env_name: &str) {
     if errors.is_empty() {
-        println!("{} ✓ No issues found for '{}'", "OK".green().bold(), env_name);
+        println!(
+            "{} ✓ No issues found for '{}'",
+            "OK".green().bold(),
+            env_name
+        );
         return;
     }
 
-    let errors_count = errors.iter().filter(|e| e.severity == Severity::Error).count();
-    let warnings_count = errors.iter().filter(|e| e.severity == Severity::Warning).count();
+    let errors_count = errors
+        .iter()
+        .filter(|e| e.severity == Severity::Error)
+        .count();
+    let warnings_count = errors
+        .iter()
+        .filter(|e| e.severity == Severity::Warning)
+        .count();
 
-    println!(
-        "{} {} for '{}'",
-        "VALIDATION".bold(),
-        env_name,
-        env_name,
-    );
+    println!("{} {} for '{}'", "VALIDATION".bold(), env_name, env_name,);
     println!("{}", "─".repeat(60));
 
     if errors_count > 0 {
@@ -113,23 +118,39 @@ pub fn print_check_results(
     env_file: &str,
     example_file: &str,
 ) {
-    println!("\n{}: {} vs {}", "CHECK".bold().cyan(), env_file, example_file);
+    println!(
+        "\n{}: {} vs {}",
+        "CHECK".bold().cyan(),
+        env_file,
+        example_file
+    );
     println!("{}", "─".repeat(60));
 
     if missing.is_empty() && extra.is_empty() {
-        println!(" {} All environment variables match the example.", "✓".green());
+        println!(
+            " {} All environment variables match the example.",
+            "✓".green()
+        );
         return;
     }
 
     if !missing.is_empty() {
-        println!("\n{} Missing in .env (-{}):", "✗".red().bold(), missing.len());
+        println!(
+            "\n{} Missing in .env (-{}):",
+            "✗".red().bold(),
+            missing.len()
+        );
         for v in missing {
             println!("  - {}", v.red());
         }
     }
 
     if !extra.is_empty() {
-        println!("\n{} Extra in .env (+{}):", "⚠".yellow().bold(), extra.len());
+        println!(
+            "\n{} Extra in .env (+{}):",
+            "⚠".yellow().bold(),
+            extra.len()
+        );
         for v in extra {
             println!("  + {}", v.yellow());
         }
@@ -137,15 +158,17 @@ pub fn print_check_results(
 }
 
 /// Print a security scan finding
-pub fn print_security_finding(
-    var_name: &str,
-    finding: &str,
-    severity: Severity,
-) {
+pub fn print_security_finding(var_name: &str, finding: &str, severity: Severity) {
     let icon = match severity {
         Severity::Error => "🔴".to_string(),
         Severity::Warning => "🟡".to_string(),
         Severity::Info => "🔵".to_string(),
     };
-    println!(" {} [{:?}] {}: {}", icon, severity, var_name.bold(), finding);
+    println!(
+        " {} [{:?}] {}: {}",
+        icon,
+        severity,
+        var_name.bold(),
+        finding
+    );
 }

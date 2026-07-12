@@ -42,7 +42,9 @@ pub fn execute(args: &ValidateArgs) -> anyhow::Result<()> {
         crate::reporting::print_validation_report(&errors, &args.name);
     }
 
-    let has_errors = errors.iter().any(|e| e.severity == crate::schema::Severity::Error);
+    let has_errors = errors
+        .iter()
+        .any(|e| e.severity == crate::schema::Severity::Error);
     if has_errors {
         std::process::exit(1);
     }

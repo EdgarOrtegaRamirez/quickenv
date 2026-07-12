@@ -152,8 +152,10 @@ fn build_language_patterns() -> Vec<LangPatterns> {
                 Regex::new(r#"os\.environ\.setdefault\(\s*['"]([^'"]+)['"]"#).unwrap(),
             ],
             def_patterns: vec![
-                Regex::new(r#"os\.environ\.get\(\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]*)['"]\s*\)"#).unwrap(),
-                Regex::new(r#"os\.getenv\(\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]*)['"]\s*\)"#).unwrap(),
+                Regex::new(r#"os\.environ\.get\(\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]*)['"]\s*\)"#)
+                    .unwrap(),
+                Regex::new(r#"os\.getenv\(\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]*)['"]\s*\)"#)
+                    .unwrap(),
             ],
             file_exts: vec![".py"],
             language_name: "python",
@@ -174,8 +176,10 @@ fn build_language_patterns() -> Vec<LangPatterns> {
                 Regex::new(r#"Deno\.env\.set\(\s*['"]([^'"]+)['"]"#).unwrap(),
             ],
             def_patterns: vec![
-                Regex::new(r#"process\.env\.([A-Za-z_][A-Za-z0-9_]*)\s*\|\|\s*['"]([^'"]*)['"]"#).unwrap(),
-                Regex::new(r#"process\.env\.([A-Za-z_][A-Za-z0-9_]*)\s*\?\?\s*['"]([^'"]*)['"]"#).unwrap(),
+                Regex::new(r#"process\.env\.([A-Za-z_][A-Za-z0-9_]*)\s*\|\|\s*['"]([^'"]*)['"]"#)
+                    .unwrap(),
+                Regex::new(r#"process\.env\.([A-Za-z_][A-Za-z0-9_]*)\s*\?\?\s*['"]([^'"]*)['"]"#)
+                    .unwrap(),
             ],
             file_exts: vec![".js", ".ts", ".jsx", ".tsx", ".mjs", ".cjs"],
             language_name: "javascript",
@@ -185,11 +189,12 @@ fn build_language_patterns() -> Vec<LangPatterns> {
             get_patterns: vec![
                 Regex::new(r#"os\.Getenv\(\s*"([^"]+)"\s*\)"#).unwrap(),
                 Regex::new(r#"os\.LookupEnv\(\s*"([^"]+)"\s*\)"#).unwrap(),
-                Regex::new(r#"viper\.(?:Get|GetString|GetInt|GetBool|GetDuration)\(\s*"([^"]+)"\s*\)"#).unwrap(),
+                Regex::new(
+                    r#"viper\.(?:Get|GetString|GetInt|GetBool|GetDuration)\(\s*"([^"]+)"\s*\)"#,
+                )
+                .unwrap(),
             ],
-            set_patterns: vec![
-                Regex::new(r#"os\.Setenv\(\s*"([^"]+)"\s*,"#).unwrap(),
-            ],
+            set_patterns: vec![Regex::new(r#"os\.Setenv\(\s*"([^"]+)"\s*,"#).unwrap()],
             def_patterns: vec![],
             file_exts: vec![".go"],
             language_name: "go",
@@ -205,9 +210,10 @@ fn build_language_patterns() -> Vec<LangPatterns> {
                 Regex::new(r#"ENV\[\s*['"]([^'"]+)['"]\s*\]\s*="#).unwrap(),
                 Regex::new(r#"ENV\.store\(\s*['"]([^'"]+)['"]"#).unwrap(),
             ],
-            def_patterns: vec![
-                Regex::new(r#"ENV\.fetch\(\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]*)['"]\s*\)"#).unwrap(),
-            ],
+            def_patterns: vec![Regex::new(
+                r#"ENV\.fetch\(\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]*)['"]\s*\)"#,
+            )
+            .unwrap()],
             file_exts: vec![".rb", ".rake"],
             language_name: "ruby",
         },
@@ -234,12 +240,8 @@ fn build_language_patterns() -> Vec<LangPatterns> {
                 Regex::new(r#"\$\{([A-Za-z_][A-Za-z0-9_]*)[:\-]([^}]*)\}"#).unwrap(),
                 Regex::new(r#"\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?"#).unwrap(),
             ],
-            set_patterns: vec![
-                Regex::new(r#"export\s+([A-Za-z_][A-Za-z0-9_]*)\s*="#).unwrap(),
-            ],
-            def_patterns: vec![
-                Regex::new(r#"\$\{([A-Za-z_][A-Za-z0-9_]*)[:\-]([^}]*)\}"#).unwrap(),
-            ],
+            set_patterns: vec![Regex::new(r#"export\s+([A-Za-z_][A-Za-z0-9_]*)\s*="#).unwrap()],
+            def_patterns: vec![Regex::new(r#"\$\{([A-Za-z_][A-Za-z0-9_]*)[:\-]([^}]*)\}"#).unwrap()],
             file_exts: vec![".sh", ".bash", ".zsh"],
             language_name: "shell",
         },
@@ -260,9 +262,10 @@ fn build_language_patterns() -> Vec<LangPatterns> {
                 Regex::new(r#"Environment\.GetEnvironmentVariable\(\s*"([^"]+)"\s*\)"#).unwrap(),
                 Regex::new(r#"Environment\.GetEnvironmentVariable\(\s*"([^"]+)"\s*,"#).unwrap(),
             ],
-            set_patterns: vec![
-                Regex::new(r#"Environment\.SetEnvironmentVariable\(\s*"([^"]+)"\s*,"#).unwrap(),
-            ],
+            set_patterns: vec![Regex::new(
+                r#"Environment\.SetEnvironmentVariable\(\s*"([^"]+)"\s*,"#,
+            )
+            .unwrap()],
             def_patterns: vec![],
             file_exts: vec![".cs", ".csx"],
             language_name: "csharp",
@@ -287,9 +290,7 @@ fn build_language_patterns() -> Vec<LangPatterns> {
                 Regex::new(r#"\$\(([A-Z_][A-Z0-9_]*)\)"#).unwrap(),
                 Regex::new(r#"\$\{([A-Z_][A-Z0-9_]*)\}"#).unwrap(),
             ],
-            set_patterns: vec![
-                Regex::new(r#"^([A-Z_][A-Z0-9_]*)\s*[:+?]?="#).unwrap(),
-            ],
+            set_patterns: vec![Regex::new(r#"^([A-Z_][A-Z0-9_]*)\s*[:+?]?="#).unwrap()],
             def_patterns: vec![],
             file_exts: vec!["Makefile", "makefile", "GNUmakefile", ".mk"],
             language_name: "makefile",
@@ -300,11 +301,33 @@ fn build_language_patterns() -> Vec<LangPatterns> {
 /// Common system environment variables to ignore
 fn is_common_env_var(name: &str) -> bool {
     let common: HashSet<&str> = [
-        "PATH", "HOME", "USER", "SHELL", "TERM", "LANG", "LC_ALL", "PWD",
-        "OLDPWD", "SHLVL", "LOGNAME", "HOSTNAME", "DISPLAY", "TMPDIR",
-        "EDITOR", "VISUAL", "PAGER", "XDG_RUNTIME_DIR", "XDG_DATA_HOME",
-        "XDG_CONFIG_HOME", "XDG_CACHE_HOME", "BASH_VERSION", "ZSH_VERSION",
-        "RUST_LOG", "RUST_BACKTRACE", "NODE_ENV", "NPM_CONFIG_LOGLEVEL",
+        "PATH",
+        "HOME",
+        "USER",
+        "SHELL",
+        "TERM",
+        "LANG",
+        "LC_ALL",
+        "PWD",
+        "OLDPWD",
+        "SHLVL",
+        "LOGNAME",
+        "HOSTNAME",
+        "DISPLAY",
+        "TMPDIR",
+        "EDITOR",
+        "VISUAL",
+        "PAGER",
+        "XDG_RUNTIME_DIR",
+        "XDG_DATA_HOME",
+        "XDG_CONFIG_HOME",
+        "XDG_CACHE_HOME",
+        "BASH_VERSION",
+        "ZSH_VERSION",
+        "RUST_LOG",
+        "RUST_BACKTRACE",
+        "NODE_ENV",
+        "NPM_CONFIG_LOGLEVEL",
     ]
     .iter()
     .cloned()
@@ -329,9 +352,21 @@ fn is_valid_env_name(name: &str) -> bool {
 /// Check if a directory should be skipped
 fn is_skip_dir(entry: &walkdir::DirEntry) -> bool {
     let skip_dirs: HashSet<&str> = [
-        "node_modules", ".git", "target", "build", "dist", "vendor",
-        ".venv", "venv", "__pycache__", ".cache", ".terraform",
-        "third_party", "third-party", "out", "coverage",
+        "node_modules",
+        ".git",
+        "target",
+        "build",
+        "dist",
+        "vendor",
+        ".venv",
+        "venv",
+        "__pycache__",
+        ".cache",
+        ".terraform",
+        "third_party",
+        "third-party",
+        "out",
+        "coverage",
     ]
     .iter()
     .cloned()
@@ -346,10 +381,7 @@ fn is_skip_dir(entry: &walkdir::DirEntry) -> bool {
 
 /// Check if a file is a test file
 fn is_test_file(path: &std::path::Path) -> bool {
-    let name = path
-        .file_name()
-        .and_then(|n| n.to_str())
-        .unwrap_or("");
+    let name = path.file_name().and_then(|n| n.to_str()).unwrap_or("");
     name.contains("_test.")
         || name.contains(".test.")
         || name.contains(".spec.")
@@ -365,7 +397,10 @@ fn get_language_for_file(path: &std::path::Path, languages: &[LangPatterns]) -> 
 
     for (idx, lang) in languages.iter().enumerate() {
         for lang_ext in &lang.file_exts {
-            if *lang_ext == file_name || *lang_ext == format!(".{}", ext) || ext == lang_ext.trim_start_matches('.') {
+            if *lang_ext == file_name
+                || *lang_ext == format!(".{}", ext)
+                || ext == lang_ext.trim_start_matches('.')
+            {
                 return Some(idx);
             }
         }
@@ -411,8 +446,16 @@ fn is_potential_secret(name: &str, value: &str) -> bool {
     // Skip placeholder values
     let lower_value = value.to_lowercase();
     let placeholders = [
-        "changeme", "your-", "xxx", "placeholder", "example",
-        "replace", "insert", "enter", "todo", "fixme",
+        "changeme",
+        "your-",
+        "xxx",
+        "placeholder",
+        "example",
+        "replace",
+        "insert",
+        "enter",
+        "todo",
+        "fixme",
     ];
     for p in &placeholders {
         if lower_value.contains(p) {
@@ -428,9 +471,22 @@ fn is_potential_secret(name: &str, value: &str) -> bool {
     // Check name for secret-like patterns
     let upper_name = name.to_uppercase();
     let secret_names = [
-        "SECRET", "KEY", "TOKEN", "PASSWORD", "PASSWD", "CREDENTIAL",
-        "AUTH", "API_KEY", "APIKEY", "PRIVATE", "SIGNING", "ENCRYPTION",
-        "CERT", "CERTIFICATE", "ACCESS_KEY", "SECRET_KEY",
+        "SECRET",
+        "KEY",
+        "TOKEN",
+        "PASSWORD",
+        "PASSWD",
+        "CREDENTIAL",
+        "AUTH",
+        "API_KEY",
+        "APIKEY",
+        "PRIVATE",
+        "SIGNING",
+        "ENCRYPTION",
+        "CERT",
+        "CERTIFICATE",
+        "ACCESS_KEY",
+        "SECRET_KEY",
     ];
     for sn in &secret_names {
         if upper_name.contains(sn) {
@@ -472,7 +528,11 @@ fn parse_env_file(content: &str, file_path: &str) -> Vec<EnvDefinition> {
             let value = value_raw
                 .strip_prefix('"')
                 .and_then(|s| s.strip_suffix('"'))
-                .or_else(|| value_raw.strip_prefix('\'').and_then(|s| s.strip_suffix('\'')))
+                .or_else(|| {
+                    value_raw
+                        .strip_prefix('\'')
+                        .and_then(|s| s.strip_suffix('\''))
+                })
                 .unwrap_or(value_raw)
                 .to_string();
             if !key.is_empty() {
@@ -489,10 +549,7 @@ fn parse_env_file(content: &str, file_path: &str) -> Vec<EnvDefinition> {
 }
 
 /// Scan a single file for env var usage
-fn scan_file(
-    path: &std::path::Path,
-    lang: &LangPatterns,
-) -> anyhow::Result<Vec<CodeUsage>> {
+fn scan_file(path: &std::path::Path, lang: &LangPatterns) -> anyhow::Result<Vec<CodeUsage>> {
     let content = std::fs::read_to_string(path)?;
     let file_path = path.to_string_lossy().to_string();
     let mut results = Vec::new();
@@ -571,7 +628,23 @@ pub fn run_audit(config: &AnalyzerConfig) -> anyhow::Result<AuditResult> {
             if e.file_type().is_dir() {
                 let name = e.file_name().to_str().unwrap_or("");
                 if config.include_dot_dirs {
-                    !matches!(name, "node_modules" | ".git" | "target" | "build" | "dist" | "vendor" | ".venv" | "venv" | "__pycache__" | ".terraform" | "third_party" | "third-party" | "out" | "coverage")
+                    !matches!(
+                        name,
+                        "node_modules"
+                            | ".git"
+                            | "target"
+                            | "build"
+                            | "dist"
+                            | "vendor"
+                            | ".venv"
+                            | "venv"
+                            | "__pycache__"
+                            | ".terraform"
+                            | "third_party"
+                            | "third-party"
+                            | "out"
+                            | "coverage"
+                    )
                 } else {
                     !is_skip_dir(e)
                 }
@@ -579,62 +652,60 @@ pub fn run_audit(config: &AnalyzerConfig) -> anyhow::Result<AuditResult> {
                 true
             }
         })
+        .flatten()
     {
-        if let Ok(entry) = entry {
-            let path = entry.path();
-            if !entry.file_type().is_file() {
+        let path = entry.path();
+        if !entry.file_type().is_file() {
+            continue;
+        }
+
+        // Skip test files if not configured
+        if !config.include_tests && is_test_file(path) {
+            continue;
+        }
+
+        // Check file size
+        if let Ok(meta) = entry.metadata() {
+            if meta.len() > config.max_file_size {
                 continue;
             }
+        }
 
-            // Skip test files if not configured
-            if !config.include_tests && is_test_file(path) {
+        // Skip .env files themselves
+        if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
+            if name.starts_with(".env") {
+                // Parse as .env file
+                if let Ok(content) = std::fs::read_to_string(path) {
+                    let file_path = path.to_string_lossy().to_string();
+                    let defs = parse_env_file(&content, &file_path);
+                    env_definitions.extend(defs);
+                }
                 continue;
             }
+        }
 
-            // Check file size
-            if let Ok(meta) = entry.metadata() {
-                if meta.len() > config.max_file_size {
-                    continue;
-                }
+        // Skip binary files
+        let skip_ext = [
+            "png", "jpg", "jpeg", "gif", "bmp", "ico", "svg", "woff", "woff2", "ttf", "eot", "mp3",
+            "mp4", "avi", "mov", "mkv", "zip", "tar", "gz", "bz2", "xz", "7z", "rar", "pdf", "doc",
+            "docx", "xls", "xlsx", "o", "so", "dll", "dylib", "exe", "lock", "sum", "sig",
+        ];
+        if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
+            if skip_ext.contains(&ext) {
+                continue;
             }
+        }
 
-            // Skip .env files themselves
-            if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
-                if name.starts_with(".env") {
-                    // Parse as .env file
-                    if let Ok(content) = std::fs::read_to_string(path) {
-                        let file_path = path.to_string_lossy().to_string();
-                        let defs = parse_env_file(&content, &file_path);
-                        env_definitions.extend(defs);
+        // Find matching language
+        if let Some(lang_idx) = get_language_for_file(path, &languages) {
+            match scan_file(path, &languages[lang_idx]) {
+                Ok(usages) => {
+                    if !usages.is_empty() {
+                        code_usages.extend(usages);
+                        files_scanned += 1;
                     }
-                    continue;
                 }
-            }
-
-            // Skip binary files
-            let skip_ext = [
-                "png", "jpg", "jpeg", "gif", "bmp", "ico", "svg", "woff", "woff2",
-                "ttf", "eot", "mp3", "mp4", "avi", "mov", "mkv", "zip", "tar", "gz",
-                "bz2", "xz", "7z", "rar", "pdf", "doc", "docx", "xls", "xlsx", "o",
-                "so", "dll", "dylib", "exe", "lock", "sum", "sig",
-            ];
-            if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
-                if skip_ext.contains(&ext) {
-                    continue;
-                }
-            }
-
-            // Find matching language
-            if let Some(lang_idx) = get_language_for_file(path, &languages) {
-                match scan_file(path, &languages[lang_idx]) {
-                    Ok(usages) => {
-                        if !usages.is_empty() {
-                            code_usages.extend(usages);
-                            files_scanned += 1;
-                        }
-                    }
-                    Err(_) => continue,
-                }
+                Err(_) => continue,
             }
         }
     }
@@ -695,7 +766,8 @@ pub fn run_audit(config: &AnalyzerConfig) -> anyhow::Result<AuditResult> {
             let message = if has_default {
                 "Used in code with default value but not defined in any .env file".to_string()
             } else {
-                "Used in code but not defined in any .env file — application may fail at runtime".to_string()
+                "Used in code but not defined in any .env file — application may fail at runtime"
+                    .to_string()
             };
             let first_usage = &usages[0];
             issues.push(Issue {
@@ -824,10 +896,7 @@ mod tests {
         let low = shannon_entropy("aaaaaa");
         // High entropy: random-looking string
         let high = shannon_entropy("aB3dEfGh1JkLmNoPqRsTuVwXyZ0123456789");
-        assert!(
-            low < high,
-            "Low entropy should be less than high entropy"
-        );
+        assert!(low < high, "Low entropy should be less than high entropy");
         assert!(high > 4.0, "Random string should have high entropy");
     }
 
@@ -845,7 +914,10 @@ mod tests {
     #[test]
     fn test_is_potential_secret_by_entropy() {
         // High entropy value >= 16 chars
-        assert!(is_potential_secret("CONFIG_VAR", "aB3dEfGh1JkLmNoPqRsTuVwXyZ0123456789"));
+        assert!(is_potential_secret(
+            "CONFIG_VAR",
+            "aB3dEfGh1JkLmNoPqRsTuVwXyZ0123456789"
+        ));
         // Short value (< 8 chars)
         assert!(!is_potential_secret("CONFIG_VAR", "abc"));
     }
@@ -868,7 +940,8 @@ mod tests {
 
     #[test]
     fn test_parse_env_file() {
-        let content = "DATABASE_URL=postgres://localhost:5432/mydb\n# comment\nAPI_KEY=secret123\nEMPTY=\n";
+        let content =
+            "DATABASE_URL=postgres://localhost:5432/mydb\n# comment\nAPI_KEY=secret123\nEMPTY=\n";
         let defs = parse_env_file(content, ".env");
         assert_eq!(defs.len(), 3);
         assert_eq!(defs[0].var_name, "DATABASE_URL");
@@ -983,9 +1056,14 @@ func main() {
         let result = run_audit(&config).unwrap();
 
         // Should have issues: missing (MISSING_VAR), unused (UNUSED_VAR), empty (EMPTY_VAR), potential secret (API_KEY)
-        assert!(result.issues.len() >= 4, "Expected at least 4 issues, got {}", result.issues.len());
+        assert!(
+            result.issues.len() >= 4,
+            "Expected at least 4 issues, got {}",
+            result.issues.len()
+        );
 
-        let issue_types: Vec<IssueType> = result.issues.iter().map(|i| i.issue_type.clone()).collect();
+        let issue_types: Vec<IssueType> =
+            result.issues.iter().map(|i| i.issue_type.clone()).collect();
         assert!(issue_types.contains(&IssueType::MissingEnv));
         assert!(issue_types.contains(&IssueType::UnusedEnv));
         assert!(issue_types.contains(&IssueType::EmptyValue));
@@ -1005,31 +1083,38 @@ func main() {
         let languages = build_language_patterns();
 
         assert_eq!(
-            get_language_for_file(std::path::Path::new("main.py"), &languages).map(|i| languages[i].language_name),
+            get_language_for_file(std::path::Path::new("main.py"), &languages)
+                .map(|i| languages[i].language_name),
             Some("python")
         );
         assert_eq!(
-            get_language_for_file(std::path::Path::new("main.go"), &languages).map(|i| languages[i].language_name),
+            get_language_for_file(std::path::Path::new("main.go"), &languages)
+                .map(|i| languages[i].language_name),
             Some("go")
         );
         assert_eq!(
-            get_language_for_file(std::path::Path::new("main.rs"), &languages).map(|i| languages[i].language_name),
+            get_language_for_file(std::path::Path::new("main.rs"), &languages)
+                .map(|i| languages[i].language_name),
             Some("rust")
         );
         assert_eq!(
-            get_language_for_file(std::path::Path::new("Dockerfile"), &languages).map(|i| languages[i].language_name),
+            get_language_for_file(std::path::Path::new("Dockerfile"), &languages)
+                .map(|i| languages[i].language_name),
             Some("docker")
         );
         assert_eq!(
-            get_language_for_file(std::path::Path::new("Makefile"), &languages).map(|i| languages[i].language_name),
+            get_language_for_file(std::path::Path::new("Makefile"), &languages)
+                .map(|i| languages[i].language_name),
             Some("makefile")
         );
         assert_eq!(
-            get_language_for_file(std::path::Path::new("test.rb"), &languages).map(|i| languages[i].language_name),
+            get_language_for_file(std::path::Path::new("test.rb"), &languages)
+                .map(|i| languages[i].language_name),
             Some("ruby")
         );
         assert_eq!(
-            get_language_for_file(std::path::Path::new("test.sh"), &languages).map(|i| languages[i].language_name),
+            get_language_for_file(std::path::Path::new("test.sh"), &languages)
+                .map(|i| languages[i].language_name),
             Some("shell")
         );
     }

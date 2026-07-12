@@ -65,7 +65,11 @@ pub fn encrypt_file(input_path: &std::path::Path, passphrase: &str) -> anyhow::R
 
     let output_path = input_path.with_extension("env.encrypted");
     std::fs::write(&output_path, &encrypted)?;
-    eprintln!("Encrypted: {} → {}", input_path.display(), output_path.display());
+    eprintln!(
+        "Encrypted: {} → {}",
+        input_path.display(),
+        output_path.display()
+    );
     Ok(())
 }
 

@@ -37,7 +37,10 @@ pub fn execute(args: &DocsArgs) -> anyhow::Result<()> {
         };
         // Escape pipe characters in description
         let description = description.replace('|', "\\|");
-        markdown.push_str(&format!("| `{}` | {} | `{}` | {} |\n", rule.name, required, default, description));
+        markdown.push_str(&format!(
+            "| `{}` | {} | `{}` | {} |\n",
+            rule.name, required, default, description
+        ));
     }
 
     if let Some(ref output_path) = args.output {

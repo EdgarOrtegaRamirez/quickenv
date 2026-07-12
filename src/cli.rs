@@ -3,7 +3,11 @@ use clap::Parser;
 use crate::commands;
 
 #[derive(Parser)]
-#[command(name = "quickenv", version, about = "Environment variable management & validation CLI")]
+#[command(
+    name = "quickenv",
+    version,
+    about = "Environment variable management & validation CLI"
+)]
 pub enum Cli {
     /// Validate .env files against a schema
     Validate(commands::validate::ValidateArgs),

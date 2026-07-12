@@ -56,7 +56,11 @@ pub fn execute(args: &GenerateArgs) -> anyhow::Result<()> {
 
     // Suggest new vars not in existing rules
     let known_names: HashSet<&str> = existing_rules.iter().map(|r| r.name.as_str()).collect();
-    let new_vars: Vec<&str> = all_vars.iter().filter(|v| !known_names.contains(v.as_str())).map(|s| s.as_str()).collect();
+    let new_vars: Vec<&str> = all_vars
+        .iter()
+        .filter(|v| !known_names.contains(v.as_str()))
+        .map(|s| s.as_str())
+        .collect();
 
     // Build output content
     let mut output = String::new();
@@ -68,8 +72,15 @@ pub fn execute(args: &GenerateArgs) -> anyhow::Result<()> {
         output.push_str("# === Detected Variables (from source code scan) ===\n");
         output.push_str("# Add descriptions and @required/@secret tags as needed\n\n");
         for var in &new_vars {
-            let value = existing_values.as_ref().and_then(|m| m.get(*var)).cloned().unwrap_or_default();
-            output.push_str(&format!("# FIXME: Add description for {}\n{}={}\n\n", var, var, value));
+            let value = existing_values
+                .as_ref()
+                .and_then(|m| m.get(*var))
+                .cloned()
+                .unwrap_or_default();
+            output.push_str(&format!(
+                "# FIXME: Add description for {}\n{}={}\n\n",
+                var, var, value
+            ));
         }
     }
 
@@ -80,7 +91,10 @@ pub fn execute(args: &GenerateArgs) -> anyhow::Result<()> {
         } else {
             output.push_str(&format!("# {}\n", rule.name));
         }
-        let value = existing_values.as_ref().and_then(|m| m.get(&rule.name)).cloned()
+        let value = existing_values
+            .as_ref()
+            .and_then(|m| m.get(&rule.name))
+            .cloned()
             .or_else(|| rule.default.clone())
             .unwrap_or_default();
         output.push_str(&format!("{}={}\n\n", rule.name, value));
@@ -98,11 +112,17 @@ pub fn execute(args: &GenerateArgs) -> anyhow::Result<()> {
     if args.stdout {
         print!("{}", output);
     } else {
-        let output_path = args.output.clone().unwrap_or_else(|| ".env.example".to_string());
+        let output_path = args
+            .output
+            .clone()
+            .unwrap_or_else(|| ".env.example".to_string());
         std::fs::write(&output_path, &output)?;
         println!("Generated: {}", output_path);
         if !new_vars.is_empty() {
-            println!("Found {} new environment variable(s) in source code.", new_vars.len());
+            println!(
+                "Found {} new environment variable(s) in source code.",
+                new_vars.len()
+            );
             for v in &new_vars {
                 println!("  - {}", v);
             }
