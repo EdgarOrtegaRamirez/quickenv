@@ -36,7 +36,8 @@ pub fn execute(args: &SyncArgs) -> anyhow::Result<()> {
     eprintln!("{}", sync::format_sync_result(&result));
 
     // Output result to file or stdout
-    let output_lines: Vec<String> = result_map.iter()
+    let output_lines: Vec<String> = result_map
+        .iter()
         .map(|(k, v)| format!("{}={}", k, v))
         .collect();
     let output = output_lines.join("\n");

@@ -150,7 +150,10 @@ pub fn format_sync_result(result: &SyncResult) -> String {
     }
 
     if !result.unchanged.is_empty() {
-        output.push_str(&format!("Unchanged: {} variables\n", result.unchanged.len()));
+        output.push_str(&format!(
+            "Unchanged: {} variables\n",
+            result.unchanged.len()
+        ));
     }
 
     output.push_str(&format!("\n{}\n", result.summary()));
@@ -229,11 +232,23 @@ mod tests {
 
     #[test]
     fn test_sync_strategy_parse() {
-        assert_eq!(SyncStrategy::from_str("overwrite").unwrap(), SyncStrategy::Overwrite);
-        assert_eq!(SyncStrategy::from_str("merge").unwrap(), SyncStrategy::Merge);
+        assert_eq!(
+            SyncStrategy::from_str("overwrite").unwrap(),
+            SyncStrategy::Overwrite
+        );
+        assert_eq!(
+            SyncStrategy::from_str("merge").unwrap(),
+            SyncStrategy::Merge
+        );
         assert_eq!(SyncStrategy::from_str("skip").unwrap(), SyncStrategy::Skip);
-        assert_eq!(SyncStrategy::from_str("add-only").unwrap(), SyncStrategy::AddOnly);
-        assert_eq!(SyncStrategy::from_str("update-only").unwrap(), SyncStrategy::UpdateOnly);
+        assert_eq!(
+            SyncStrategy::from_str("add-only").unwrap(),
+            SyncStrategy::AddOnly
+        );
+        assert_eq!(
+            SyncStrategy::from_str("update-only").unwrap(),
+            SyncStrategy::UpdateOnly
+        );
     }
 
     #[test]

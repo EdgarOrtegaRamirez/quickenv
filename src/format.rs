@@ -49,7 +49,10 @@ pub fn import_env(data: &str, format_type: FormatType) -> anyhow::Result<BTreeMa
 }
 
 /// Export env vars to a foreign format.
-pub fn export_env(env: &BTreeMap<String, String>, format_type: FormatType) -> anyhow::Result<String> {
+pub fn export_env(
+    env: &BTreeMap<String, String>,
+    format_type: FormatType,
+) -> anyhow::Result<String> {
     match format_type {
         FormatType::Dotenv => export_dotenv(env),
         FormatType::DockerCompose => export_docker_compose(env),
@@ -73,9 +76,10 @@ fn import_dotenv(data: &str) -> anyhow::Result<BTreeMap<String, String>> {
             let key = line[..eq_pos].trim().to_string();
             let mut value = line[eq_pos + 1..].trim().to_string();
             // Remove surrounding quotes
-            if (value.starts_with('"') && value.ends_with('"')) ||
-               (value.starts_with('\'') && value.ends_with('\'')) {
-                value = value[1..value.len()-1].to_string();
+            if (value.starts_with('"') && value.ends_with('"'))
+                || (value.starts_with('\'') && value.ends_with('\''))
+            {
+                value = value[1..value.len() - 1].to_string();
             }
             env.insert(key, value);
         }
@@ -209,8 +213,12 @@ fn import_json(data: &str) -> anyhow::Result<BTreeMap<String, String>> {
     if let serde_json::Value::Object(map) = config {
         for (key, val) in map {
             match val {
-                serde_json::Value::String(s) => { env.insert(key, s); }
-                other => { env.insert(key, format!("{}", other)); }
+                serde_json::Value::String(s) => {
+                    env.insert(key, s);
+                }
+                other => {
+                    env.insert(key, format!("{}", other));
+                }
             }
         }
     }
@@ -226,8 +234,11 @@ fn needs_quoting(value: &str) -> bool {
     if value.is_empty() {
         return false;
     }
-    value.contains(' ') || value.contains('#') || value.contains('=') ||
-    value.contains('"') || value.contains('\'')
+    value.contains(' ')
+        || value.contains('#')
+        || value.contains('=')
+        || value.contains('"')
+        || value.contains('\'')
 }
 
 #[cfg(test)]
@@ -322,9 +333,18 @@ mod tests {
     #[test]
     fn test_format_type_parse() {
         assert_eq!(FormatType::from_str("json").unwrap(), FormatType::Json);
-        assert_eq!(FormatType::from_str("docker-compose").unwrap(), FormatType::DockerCompose);
-        assert_eq!(FormatType::from_str("kubernetes").unwrap(), FormatType::Kubernetes);
-        assert_eq!(FormatType::from_str("circleci").unwrap(), FormatType::CircleCI);
+        assert_eq!(
+            FormatType::from_str("docker-compose").unwrap(),
+            FormatType::DockerCompose
+        );
+        assert_eq!(
+            FormatType::from_str("kubernetes").unwrap(),
+            FormatType::Kubernetes
+        );
+        assert_eq!(
+            FormatType::from_str("circleci").unwrap(),
+            FormatType::CircleCI
+        );
         assert_eq!(FormatType::from_str("github").unwrap(), FormatType::GitHub);
         assert_eq!(FormatType::from_str("dotenv").unwrap(), FormatType::Dotenv);
     }

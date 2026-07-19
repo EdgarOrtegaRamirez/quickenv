@@ -24,9 +24,15 @@ pub fn parse_template(data: &str) -> Template {
     let re = regex::Regex::new(r#"\$\{(\w+)(?::-([^}]*))?\}"#).unwrap();
     for cap in re.captures_iter(data) {
         let key = cap[1].to_string();
-        let default = cap.get(2).map(|m| m.as_str().to_string()).unwrap_or_default();
+        let default = cap
+            .get(2)
+            .map(|m| m.as_str().to_string())
+            .unwrap_or_default();
         if seen_keys.insert(key.clone()) {
-            vars.push(TemplateVar { key, value: default });
+            vars.push(TemplateVar {
+                key,
+                value: default,
+            });
         }
     }
 
@@ -49,7 +55,8 @@ pub fn render_template(template: &Template, values: &BTreeMap<String, String>) -
     let mut result = template.env_content.clone();
     for (key, value) in values {
         // Replace ${KEY} and ${KEY:-default} forms
-        let re = regex::Regex::new(&format!(r#"\$\{{{}(?::-([^}}]*))?\}}"#, regex::escape(key))).unwrap();
+        let re = regex::Regex::new(&format!(r#"\$\{{{}(?::-([^}}]*))?\}}"#, regex::escape(key)))
+            .unwrap();
         result = re.replace_all(&result, value.as_str()).to_string();
     }
     result
@@ -89,8 +96,16 @@ pub fn format_template(template: &Template, _show_defaults: bool) -> String {
     output.push_str(&format!("# Variables: {}\n\n", template.vars.len()));
 
     if !template.vars.is_empty() {
-        let required: Vec<&TemplateVar> = template.vars.iter().filter(|v| v.value.is_empty()).collect();
-        let optional: Vec<&TemplateVar> = template.vars.iter().filter(|v| !v.value.is_empty()).collect();
+        let required: Vec<&TemplateVar> = template
+            .vars
+            .iter()
+            .filter(|v| v.value.is_empty())
+            .collect();
+        let optional: Vec<&TemplateVar> = template
+            .vars
+            .iter()
+            .filter(|v| !v.value.is_empty())
+            .collect();
 
         if !required.is_empty() {
             output.push_str("# Required variables:\n");

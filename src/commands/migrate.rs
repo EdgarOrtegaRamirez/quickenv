@@ -1,8 +1,8 @@
 use clap::Args;
 use std::path::PathBuf;
 
-use crate::migrate;
 use crate::envfile;
+use crate::migrate;
 
 #[derive(Args)]
 pub struct MigrateArgs {
@@ -30,7 +30,9 @@ pub fn execute(args: &MigrateArgs) -> anyhow::Result<()> {
     eprintln!("{}", migrate::format_migrate_result(&result));
 
     // Output the resulting env file
-    let output_lines: Vec<String> = result.env_map.iter()
+    let output_lines: Vec<String> = result
+        .env_map
+        .iter()
         .map(|(k, v)| format!("{}={}", k, v))
         .collect();
     let output = output_lines.join("\n");
